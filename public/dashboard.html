@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Money Tracker - Investor Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1><i class="fas fa-wallet"></i> Money Tracker Dashboard</h1>
+      <div class="user-section">
+        <span id="userInfo"></span>
+        <button id="logoutBtn" class="btn-logout">Logout</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- Form Section -->
+      <section class="form-section">
+        <h2><i class="fas fa-edit"></i> Log MTN Activity</h2>
+        <form id="earningsForm">
+          <div class="grid-form">
+            <div class="form-group">
+              <label for="date">Date:</label>
+              <input type="date" id="date" name="date" required>
+              
+              <label for="time">Time:</label>
+              <input type="time" id="time" name="time" required>
+            </div>
+            <div class="form-group">
+              <label for="mtn">MTN Cash In/Out:</label>
+              <input type="number" id="mtn" name="mtn" min="0" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="commission">Commission Balance:</label>
+              <input type="number" id="commission" name="commission" min="0" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="capital">Remaining Capital:</label>
+              <input type="number" id="capital" name="capital" min="0" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="expenses">Expenses:</label>
+              <input type="number" id="expenses" name="expenses" min="0" step="0.01" required />
+            </div>
+            
+          </div>
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-save"></i> Save Record
+          </button>
+        </form>
+      </section>
+
+      <!-- Summary Section -->
+      <section class="summary-section">
+        <h2><i class="fas fa-chart-bar"></i> Performance Summary</h2>
+        <div class="summary-buttons">
+          <button id="weeklySummary" class="btn-summary">Weekly</button>
+          <button id="monthlySummary" class="btn-summary">Monthly</button>
+        </div>
+        <div id="summaryContent" class="summary-content"></div>
+      </section>
+
+      <!-- Records Table -->
+      <section class="records-section">
+        <h2><i class="fas fa-list"></i> Logged Records</h2>
+        <div class="table-container">
+          <table id="earningsTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>MTN</th>
+                <th>Commission</th>
+                <th>Capital</th>
+                <th>Expenses</th>
+                <th>Net</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
