@@ -6,17 +6,12 @@ const earningSchema = new mongoose.Schema({
     required: true,
     default: Date.now
   },
-  mtn: {
+  openingCapital: {
     type: Number,
     required: true,
     default: 0
   },
-  airtel: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  bonus: {
+  earnings: {
     type: Number,
     required: true,
     default: 0
@@ -26,17 +21,64 @@ const earningSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
-  net: {
+  mtnFloat: {
     type: Number,
-    required: true
+    required: true,
+    default: 0
+  },
+  cashInHand: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  expectedTotalCapital: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  netProfit: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  discrepancy: {
+    type: Boolean,
+    default: false
+  },
+  discrepancyNote: {
+    type: String,
+    default: ''
+  },
+  // Future-proofing fields
+  agent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
+  },
+  account: {
+    type: String,
+    required: false
+  },
+  dailyGoal: {
+    type: Number,
+    required: false
   }
 }, {
   timestamps: true
 });
 
-// Calculate net profit before saving
+// Calculate netProfit, expectedTotalCapital, and flag discrepancies before saving
 earningSchema.pre('save', function(next) {
-  this.net = (this.mtn + this.airtel + this.bonus) - this.expenses;
+  this.expectedTotalCapital = this.openingCapital + this.earnings - this.expenses;
+  this.netProfit = this.earnings - this.expenses;
+  const sum = this.mtnFloat + this.cashInHand;
+  if (this.expectedTotalCapital !== sum) {
+    this.discrepancy = true;
+    this.discrepancyNote = `Expected total (${this.expectedTotalCapital}) does not match actual (Float + Cash = ${sum})`;
+  } else {
+    this.discrepancy = false;
+    this.discrepancyNote = '';
+  }
   next();
 });
 

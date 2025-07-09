@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Money Tracker Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="landing-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>
+                        <a href="index.html" class="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:0.75rem;">
+                            <i class="fas fa-wallet" aria-hidden="true"></i>
+                            <span class="logo-text">Money Tracker <span class="pro-badge">Pro</span></span>
+                        </a>
+                    </h1>
+                    <p class="tagline">Professional Mobile Money Management</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="auth-section otp-section">
+                <div class="auth-header">
+                    <div class="auth-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2>Verify Your Account</h2>
+                    <p class="auth-subtitle">Enter the 6-digit code sent to your email or phone</p>
+                </div>
+                <div id="otp-message" class="otp-message"></div>
+                <form id="otpForm" class="auth-form">
+                    <div class="otp-container">
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="First digit">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="Second digit">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="Third digit">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="Fourth digit">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="Fifth digit">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5" inputmode="numeric" autocomplete="one-time-code" required placeholder="0" title="Sixth digit">
+                        </div>
+                        <div class="otp-timer">
+                            <p class="timer-text">
+                                <i class="fas fa-clock"></i>
+                                <span id="timer">02:00</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check"></i>
+                        <span>Verify Code</span>
+                    </button>
+                </form>
+
+                <div class="resend-section">
+                    <button id="resendBtn" class="resend-btn" disabled>
+                        <i class="fas fa-redo"></i>
+                        <span>Resend Code</span>
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p class="auth-link">
+                        <a href="login.html">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Login
+                        </a>
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="otp.js"></script>
+</body>
+</html> 

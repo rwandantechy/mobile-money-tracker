@@ -20,9 +20,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
-  fullName: {
+  firstName: {
     type: String,
     required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
   },
   role: {
     type: String,
@@ -88,6 +98,41 @@ userSchema.pre('save', async function (next) {
 // Compare candidate password with hashed password
 userSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Generate a 6-digit OTP, set expiry, and return it
+userSchema.methods.generateOTP = function () {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  this.otp = otp;
+  this.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+  return otp;
+};
+
+// Verify OTP and expiry, clear OTP if valid
+userSchema.methods.verifyOTP = function (otp) {
+  if (
+    this.otp === otp &&
+    this.otpExpiresAt &&
+    this.otpExpiresAt > new Date()
+  ) {
+    this.otp = '';
+    this.otpExpiresAt = null;
+    return true;
+  }
+  return false;
+};
+
+// Clear OTP and expiry, and save the user
+userSchema.methods.clearOTP = function () {
+  this.otp = '';
+  this.otpExpiresAt = null;
+  return this.save();
+};
+
+// Update lastLogin to now and save the user
+userSchema.methods.updateLastLogin = function () {
+  this.lastLogin = new Date();
+  return this.save();
 };
 
 module.exports = mongoose.model('User', userSchema);

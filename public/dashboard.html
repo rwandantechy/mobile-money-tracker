@@ -3,90 +3,204 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Money Tracker - Investor Dashboard</title>
+  <title>Dashboard - Money Tracker Pro</title>
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="app-container">
-    <header class="app-header">
-      <h1><i class="fas fa-wallet"></i> Money Tracker Dashboard</h1>
-      <div class="user-section">
-        <span id="userInfo"></span>
-        <button id="logoutBtn" class="btn-logout">Logout</button>
+  <div class="dashboard-container">
+    <header class="landing-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <h1>
+            <a href="index.html" class="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:0.75rem;">
+              <i class="fas fa-wallet" aria-hidden="true"></i>
+              <span class="logo-text">Money Tracker <span class="pro-badge">Pro</span></span>
+            </a>
+          </h1>
+          <p class="tagline">Professional Mobile Money Management</p>
+        </div>
+        <nav class="user-section" aria-label="User menu">
+          <span id="userInfo" class="welcome-text">Welcome, Cedric</span>
+        
+          <div class="profile-dropdown-container">
+            <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <nav id="profileDropdown" class="profile-dropdown" aria-label="Profile menu">
+              <a href="/profile.html">
+                <i class="fas fa-user"></i>
+                View Profile
+              </a>
+              <a href="/settings.html">
+                <i class="fas fa-cog"></i>
+                Settings
+              </a>
+              <a href="/logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+              </a>
+            </nav>
+          </div>
+        </nav>
       </div>
     </header>
 
-    <main class="app-main">
-      <!-- Form Section -->
-      <section class="form-section">
-        <h2><i class="fas fa-edit"></i> Log MTN Activity</h2>
-        <form id="earningsForm">
-          <div class="grid-form">
-            <div class="form-group">
-              <label for="date">Date:</label>
-              <input type="date" id="date" name="date" required>
-              
-              <label for="time">Time:</label>
-              <input type="time" id="time" name="time" required>
-            </div>
-            <div class="form-group">
-              <label for="mtn">MTN Cash In/Out:</label>
-              <input type="number" id="mtn" name="mtn" min="0" step="0.01" required />
-            </div>
-            <div class="form-group">
-              <label for="commission">Commission Balance:</label>
-              <input type="number" id="commission" name="commission" min="0" step="0.01" required />
-            </div>
-            <div class="form-group">
-              <label for="capital">Remaining Capital:</label>
-              <input type="number" id="capital" name="capital" min="0" step="0.01" required />
-            </div>
-            <div class="form-group">
-              <label for="expenses">Expenses:</label>
-              <input type="number" id="expenses" name="expenses" min="0" step="0.01" required />
-            </div>
-            
+    <main class="dashboard-main">
+      <div class="dashboard-content">
+        <section class="dashboard-header">
+          <div class="dashboard-title">
+            <h2>Dashboard</h2>
+            <p class="dashboard-subtitle">Track your mobile money transactions and earnings</p>
           </div>
-          <button type="submit" class="btn-submit">
-            <i class="fas fa-save"></i> Save Record
-          </button>
-        </form>
-      </section>
+          <div class="dashboard-actions">
+            <button class="btn btn-primary" id="addTransactionBtn">
+              <i class="fas fa-plus"></i>
+              <span>Add Transaction</span>
+            </button>
+          </div>
+        </section>
 
-      <!-- Summary Section -->
-      <section class="summary-section">
-        <h2><i class="fas fa-chart-bar"></i> Performance Summary</h2>
-        <div class="summary-buttons">
-          <button id="weeklySummary" class="btn-summary">Weekly</button>
-          <button id="monthlySummary" class="btn-summary">Monthly</button>
+        <!-- Add Transaction Modal -->
+        <div id="addTransactionModal" class="modal-overlay" style="display:none;">
+          <div class="modal-content">
+            <button class="modal-close" id="closeTransactionModal" title="Close">&times;</button>
+            <h3>Add Daily Log</h3>
+            <form id="transactionForm" class="modal-form">
+              <div class="form-group">
+                <label for="date"><i class="fas fa-calendar-day"></i> Date</label>
+                <input type="date" id="date" name="date" required>
+              </div>
+              <div class="form-group">
+                <label for="openingCapital"><i class="fas fa-door-open"></i> Opening Capital</label>
+                <input type="number" id="openingCapital" name="openingCapital" required min="0" step="0.01" placeholder="Opening capital">
+              </div>
+              <div class="form-group">
+                <label for="earnings"><i class="fas fa-coins"></i> Earnings</label>
+                <input type="number" id="earnings" name="earnings" required min="0" step="0.01" placeholder="Earnings for the day">
+              </div>
+              <div class="form-group">
+                <label for="expenses"><i class="fas fa-receipt"></i> Expenses</label>
+                <input type="number" id="expenses" name="expenses" required min="0" step="0.01" placeholder="Expenses for the day">
+              </div>
+              <div class="form-group">
+                <label for="mtnFloat"><i class="fas fa-sim-card"></i> MTN Float</label>
+                <input type="number" id="mtnFloat" name="mtnFloat" required min="0" step="0.01" placeholder="MTN float at close">
+              </div>
+              <div class="form-group">
+                <label for="cashInHand"><i class="fas fa-money-bill-wave"></i> Cash In Hand</label>
+                <input type="number" id="cashInHand" name="cashInHand" required min="0" step="0.01" placeholder="Cash in hand at close">
+              </div>
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i> Save Log
+              </button>
+              <!-- WhatsApp preview removed -->
+            </form>
+          </div>
         </div>
-        <div id="summaryContent" class="summary-content"></div>
-      </section>
 
-      <!-- Records Table -->
-      <section class="records-section">
-        <h2><i class="fas fa-list"></i> Logged Records</h2>
-        <div class="table-container">
-          <table id="earningsTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>MTN</th>
-                <th>Commission</th>
-                <th>Capital</th>
-                <th>Expenses</th>
-                <th>Net</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
+        <!-- Dashboard Summary Cards -->
+        <section class="stats-grid" id="dashboardStats">
+          <!-- Cards will be rendered by JS -->
+        </section>
+
+        <section class="dashboard-grid">
+          <!-- Daily Logs & History Section -->
+          <div class="dashboard-card full-width">
+            <div class="dashboard-card-content">
+              <div class="card-header">
+                <h3>Daily Logs & History</h3>
+                <div class="card-actions">
+                  <div class="search-filter-container">
+                    <input type="text" id="searchLogs" placeholder="Search logs..." class="search-input">
+                    <input type="date" id="startDate" class="date-input" placeholder="Start Date">
+                    <input type="date" id="endDate" class="date-input" placeholder="End Date">
+                                   <select id="sortBy" class="sort-select" aria-label="Sort by">
+                   <option value="date">Sort by Date</option>
+                   <option value="earnings">Sort by Earnings</option>
+                   <option value="netProfit">Sort by Profit</option>
+                 </select>
+                  <button class="btn btn-secondary" id="applyFilterBtn">
+                    <i class="fas fa-search"></i> Filter
+                  </button>
+                </div>
+                <button class="btn btn-secondary dropdown-toggle" id="exportDropdownBtn">
+                  <i class="fas fa-download"></i> Export <i class="fas fa-caret-down"></i>
+                </button>
+                <ul class="dropdown-menu" id="exportDropdownMenu" style="display:none; position:absolute; z-index:1000; background:white; border:1px solid #eee; border-radius:0.5rem; min-width:180px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                  <li><button class="dropdown-item" id="exportAllPdfBtn">Export All Logs (PDF)</button></li>
+                  <li><button class="dropdown-item" id="exportSummaryPdfBtn">Export Summary (PDF)</button></li>
+                </ul>
+              </div>
+            </div>
+            <div class="logs-insights">
+              <div class="insight-card">
+                <h4>Today's Summary</h4>
+                <div id="todaySummary" class="insight-content">
+                  <!-- Today's data will be rendered here -->
+                </div>
+              </div>
+              <div class="insight-card">
+                <h4>This Week</h4>
+                <div id="weekSummary" class="insight-content">
+                  <!-- Week data will be rendered here -->
+                </div>
+              </div>
+              <div class="insight-card">
+                <h4>This Month</h4>
+                <div id="monthSummary" class="insight-content">
+                  <!-- Month data will be rendered here -->
+                </div>
+              </div>
+            </div>
+            <div id="dailyLogsList" class="transaction-list">
+              <!-- Logs will be rendered here by JS -->
+            </div>
+            <div class="pagination-container">
+              <div class="pagination-info">
+                <span id="paginationInfo">Showing 1-20 of 0 records</span>
+              </div>
+              <div class="pagination-controls">
+                <button id="prevPageBtn" class="btn btn-secondary" disabled>
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                  <!-- Page numbers will be rendered here -->
+                </div>
+                <button id="nextPageBtn" class="btn btn-secondary" disabled>
+                  Next <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
+  <script src="dashboard.js"></script>
 
-  <script src="app.js"></script>
+  <!-- Custom Range Modal -->
+  <div id="customRangeModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:400px;">
+      <span class="close" id="closeCustomRangeModal">&times;</span>
+      <h3>Export Custom Range</h3>
+      <form id="customRangeForm">
+        <label for="customStartDate">Start Date:</label>
+        <input type="date" id="customStartDate" name="customStartDate" required>
+        <label for="customEndDate">End Date:</label>
+        <input type="date" id="customEndDate" name="customEndDate" required>
+        <label for="customExportFormat">Format:</label>
+        <select id="customExportFormat" name="customExportFormat">
+          <option value="csv">CSV</option>
+          <option value="pdf">PDF</option>
+        </select>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Export</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
