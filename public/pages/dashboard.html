@@ -25,13 +25,18 @@
           <p class="tagline">Professional Mobile Money Management</p>
         </div>
         <nav class="user-section" aria-label="User menu">
-          <span id="userInfo" class="welcome-text">Welcome, Cedric</span>
-        
-          <div class="profile-dropdown-container">
+          <div id="userInfo" class="user-info">
+            <span class="welcome-text">Welcome, <span id="userName">User</span></span>
+          </div>
+          <div class="profile-dropdown-container" id="profileDropdownContainer">
             <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
               <i class="fas fa-user-circle"></i>
             </button>
             <nav id="profileDropdown" class="profile-dropdown" aria-label="Profile menu">
+              <a href="/dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+              </a>
               <a href="/profile">
                 <i class="fas fa-user"></i>
                 View Profile
