@@ -23,8 +23,14 @@
           <p class="tagline">Professional Mobile Money Management</p>
         </div>
         <nav class="user-section" aria-label="User menu">
-          <span id="userInfo" class="welcome-text">Welcome, Cedric</span>
-          <div class="profile-dropdown-container">
+          <div id="authButtons" class="auth-buttons" style="display: none;">
+            <a href="/login" class="btn btn-outline">Sign In</a>
+            <a href="/register" class="btn btn-primary">Get Started</a>
+          </div>
+          <div id="userInfo" class="user-info" style="display: none;">
+            <span class="welcome-text">Welcome, <span id="userName">User</span></span>
+          </div>
+          <div class="profile-dropdown-container" id="profileDropdownContainer" style="display: none;">
             <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
               <i class="fas fa-user-circle"></i>
             </button>
@@ -214,5 +220,6 @@
   </div>
   <script src="js/dropdown.js"></script>
   <script src="js/userData.js"></script>
+  <script src="/js/header.js"></script>
 </body>
 </html>

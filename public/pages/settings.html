@@ -16,7 +16,7 @@
       <div class="header-content">
         <div class="logo-section">
           <h1>
-            <a href="/" class="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:0.75rem;">
+            <a href="/" class="logo-link">
               <i class="fas fa-wallet" aria-hidden="true"></i>
               <span class="logo-text">Money Tracker <span class="pro-badge">Pro</span></span>
             </a>
@@ -31,14 +31,18 @@
               <i class="fas fa-user-circle"></i>
             </button>
             <nav id="profileDropdown" class="profile-dropdown" aria-label="Profile menu">
-                          <a href="/profile">
-              <i class="fas fa-user"></i>
-              View Profile
-            </a>
-            <a href="/settings">
-              <i class="fas fa-cog"></i>
-              Settings
-            </a>
+              <a href="/dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+              </a>
+              <a href="/profile">
+                <i class="fas fa-user"></i>
+                View Profile
+              </a>
+              <a href="/settings">
+                <i class="fas fa-cog"></i>
+                Settings
+              </a>
               <a href="/logout" class="logout-link">
                 <i class="fas fa-sign-out-alt"></i>
                 Logout
@@ -163,5 +167,6 @@
   </div>
       <script src="/js/app.js"></script>
     <script src="/js/dropdown.js"></script>
+    <script src="/js/header.js"></script>
 </body>
 </html>

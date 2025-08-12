@@ -5,6 +5,42 @@
 */
 
 :root {
+  --primary-color: #004f71; /* MoMo Blue */
+  --primary-dark: #003554; /* A darker shade of MoMo Blue */
+  --secondary-color: #ffcb05; /* MTN Sunshine */
+  --accent-color: #ffcb05; /* MTN Sunshine */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --text-color: #1f2937;
+  --text-dark: #111827;
+  --text-light: #6b7280;
+  --text-lighter: #9ca3af;
+  --light-bg: #ffffff; /* White */
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --gradient-primary: linear-gradient(135deg, #004f71 0%, #ffcb05 100%);
+  --gradient-secondary: linear-gradient(135deg, #ffcb05 0%, #004f71 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #004f71 0%,
+    #ffcb05 50%,
+    #ffffff 100%
+  );
+  
+  /* Legacy variables for backward compatibility */
   --mtn-yellow: #FFD600;
   --mtn-gold: #FFB400;
   --mtn-blue: #0072CE;
@@ -12,12 +48,6 @@
   --soft-blue: #e3f0fa;
   --dark: #222222;
   --light-bg: #F5F5F5;
-  --white: #FFFFFF;
-  --gray-100: #EEEEEE;
-  --gray-200: #E0E0E0;
-  --gray-300: #BDBDBD;
-  --shadow: 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
   --success: #22c55e;
   --error: #e11d48;
 }
@@ -46,42 +76,52 @@ html, body {
 
 /* Header */
 .landing-header {
-  background: var(--soft-yellow);
-  box-shadow: var(--shadow);
-  padding: 1.5rem 0;
-  border-bottom: 1px solid #f5e9a5;
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-200);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 1rem 0;
 }
 .header-content {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
 }
 .logo-section h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--dark);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 .logo-section .logo-text {
-  font-weight: 900;
-  letter-spacing: 0.5px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .pro-badge {
-  background: var(--mtn-blue);
-  color: var(--white);
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  padding: 0.1rem 0.5rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
   margin-left: 0.5rem;
+  -webkit-text-fill-color: var(--primary-color);
 }
 .tagline {
-  color: var(--dark);
-  font-size: 1rem;
-  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-weight: 400;
 }
 
 /* Summary Cards */
