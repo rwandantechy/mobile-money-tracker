@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update header user info
     if (userInfoElement) {
-        const userName = userData.fullName || userData.firstName || userData.email || 'User';
+        const userName = userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.email || 'User';
         userInfoElement.textContent = `Welcome, ${userName}`;
     }
     
-    // Load user profile data
+    // Load user profile data from localStorage
     loadUserProfile();
     
     // Event listeners
@@ -49,89 +49,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * Load user profile data from API
+     * Load user profile data from localStorage
      */
-    async function loadUserProfile() {
-        try {
-            const response = await fetch('/api/auth/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                const profileData = await response.json();
-                
-                // Populate form fields
-                if (fullNameInput) fullNameInput.value = profileData.fullName || '';
-                if (phoneInput) phoneInput.value = profileData.phone || '';
-                if (emailInput) emailInput.value = profileData.email || '';
-                if (roleInput) roleInput.value = profileData.role || 'user';
-                
-                // Update verification status
-                if (verificationStatus) {
-                    verificationStatus.textContent = profileData.isVerified ? 'Verified' : 'Unverified';
-                    verificationStatus.className = profileData.isVerified ? 'verified' : 'unverified';
-                }
-                
-                // Update profile picture if available
-                if (profileData.profilePicture && profilePic) {
-                    profilePic.src = profileData.profilePicture;
-                }
-                
-            } else {
-                console.error('Failed to load profile data');
-                showToast('Failed to load profile data', 'error');
-            }
-        } catch (error) {
-            console.error('Error loading profile:', error);
-            showToast('Error loading profile data', 'error');
+    function loadUserProfile() {
+        // Populate form fields from localStorage
+        if (fullNameInput) {
+            const fullName = userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+            fullNameInput.value = fullName;
+        }
+        if (phoneInput) phoneInput.value = userData.phone || '';
+        if (emailInput) emailInput.value = userData.email || '';
+        if (roleInput) roleInput.value = userData.role || 'user';
+        
+        // Update verification status
+        if (verificationStatus) {
+            const isVerified = userData.isVerified === true || userData.isVerified === 'true';
+            verificationStatus.textContent = isVerified ? 'Verified' : 'Unverified';
+            verificationStatus.className = isVerified ? 'verified' : 'unverified';
+        }
+        
+        // Update profile picture if available
+        if (userData.profilePicture && profilePic) {
+            profilePic.src = userData.profilePicture;
         }
     }
     
     /**
      * Handle profile form submission
      */
-    async function handleProfileUpdate(e) {
+    function handleProfileUpdate(e) {
         e.preventDefault();
         
-        const formData = {
-            fullName: fullNameInput.value.trim()
-        };
+        const newFullName = fullNameInput.value.trim();
         
-        try {
-            const response = await fetch('/api/auth/profile', {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            if (response.ok) {
-                const updatedProfile = await response.json();
-                
-                // Update localStorage user data
-                const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-                currentUser.fullName = updatedProfile.fullName;
-                localStorage.setItem('user', JSON.stringify(currentUser));
-                
-                // Update header
-                if (userInfoElement) {
-                    userInfoElement.textContent = `Welcome, ${updatedProfile.fullName}`;
-                }
-                
-                showToast('Profile updated successfully', 'success');
-            } else {
-                const errorData = await response.json();
-                showToast(errorData.message || 'Failed to update profile', 'error');
-            }
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            showToast('Error updating profile', 'error');
+        // Update localStorage user data
+        userData.fullName = newFullName;
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        // Update header
+        if (userInfoElement) {
+            userInfoElement.textContent = `Welcome, ${newFullName}`;
         }
+        
+        showToast('Profile updated successfully', 'success');
     }
     
     /**
@@ -162,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /**
      * Handle account deletion
      */
-    async function handleAccountDeletion() {
+    function handleAccountDeletion() {
         if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
             return;
         }
@@ -171,35 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        try {
-            const response = await fetch('/api/auth/profile', {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                // Clear localStorage
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                sessionStorage.clear();
-                
-                showToast('Account deleted successfully', 'success');
-                
-                // Redirect to login page
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-            } else {
-                const errorData = await response.json();
-                showToast(errorData.message || 'Failed to delete account', 'error');
-            }
-        } catch (error) {
-            console.error('Error deleting account:', error);
-            showToast('Error deleting account', 'error');
-        }
+        // Clear localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        sessionStorage.clear();
+        
+        showToast('Account deleted successfully', 'success');
+        
+        // Redirect to login page
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 2000);
     }
     
     /**
