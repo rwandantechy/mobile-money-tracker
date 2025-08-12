@@ -128,6 +128,8 @@ exports.login = async (req, res) => {
         role: user.role,
         firstName: user.firstName,
         lastName: user.lastName,
+        isVerified: user.isVerified,
+        profilePicture: user.profilePicture,
       }
     });
   } catch (error) {
