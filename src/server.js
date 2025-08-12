@@ -38,6 +38,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/register.html'));
 });
 
+app.get('/forgot-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/password-reset.html'));
+});
+
 // Protected routes (auth required)
 app.get('/app', webAuth, (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/dashboard.html'));
