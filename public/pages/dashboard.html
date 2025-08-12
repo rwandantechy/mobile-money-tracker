@@ -26,7 +26,7 @@
         </div>
         <nav class="user-section" aria-label="User menu">
           <div id="userInfo" class="user-info">
-            <span class="welcome-text">Welcome, <span id="userName">User</span></span>
+            <span class="welcome-text"><span id="userName">User</span></span>
           </div>
           <div class="profile-dropdown-container" id="profileDropdownContainer">
             <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
@@ -133,13 +133,18 @@
                     <i class="fas fa-search"></i> Filter
                   </button>
                 </div>
-                <button class="btn btn-secondary dropdown-toggle" id="exportDropdownBtn">
-                  <i class="fas fa-download"></i> Export <i class="fas fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu" id="exportDropdownMenu" style="display:none; position:absolute; z-index:1000; background:white; border:1px solid #eee; border-radius:0.5rem; min-width:180px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-                  <li><button class="dropdown-item" id="exportAllPdfBtn">Export All Logs (PDF)</button></li>
-                  <li><button class="dropdown-item" id="exportSummaryPdfBtn">Export Summary (PDF)</button></li>
-                </ul>
+                <div class="export-dropdown-container">
+                  <button class="btn btn-secondary dropdown-toggle" id="exportDropdownBtn">
+                    <i class="fas fa-download"></i> Export <i class="fas fa-caret-down"></i>
+                  </button>
+                  <ul class="dropdown-menu" id="exportDropdownMenu">
+                    <li><button class="dropdown-item" id="exportAllPdfBtn"><i class="fas fa-file-pdf"></i> Export All Logs (PDF)</button></li>
+                    <li><button class="dropdown-item" id="exportAllCsvBtn"><i class="fas fa-file-csv"></i> Export All Logs (CSV)</button></li>
+                    <li class="dropdown-divider"></li>
+                    <li><button class="dropdown-item" id="exportSummaryPdfBtn"><i class="fas fa-file-pdf"></i> Export Summary (PDF)</button></li>
+                    <li><button class="dropdown-item" id="exportSummaryCsvBtn"><i class="fas fa-file-csv"></i> Export Summary (CSV)</button></li>
+                  </ul>
+                </div>
               </div>
             </div>
             <div class="logs-insights">
@@ -186,6 +191,10 @@
       </div>
     </main>
   </div>
+      <!-- Export Libraries -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+      
       <script src="/js/dashboard.js"></script>
       <script src="/js/header.js"></script>
 

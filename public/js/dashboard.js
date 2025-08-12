@@ -483,15 +483,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const headers = ['Date', 'Opening Capital', 'Earnings', 'Expenses', 'MTN Float', 'Cash In Hand', 'Expected Total', 'Net Profit', 'Discrepancy'];
     const rows = logs.map(log => [
       new Date(log.date).toLocaleDateString(),
-      log.openingCapital,
-      log.earnings,
-      log.expenses,
-      log.mtnFloat,
-      log.cashInHand,
-      log.expectedTotalCapital,
-      log.netProfit,
+      log.openingCapital?.toFixed(2) || '0.00',
+      log.earnings?.toFixed(2) || '0.00',
+      log.expenses?.toFixed(2) || '0.00',
+      log.mtnFloat?.toFixed(2) || '0.00',
+      log.cashInHand?.toFixed(2) || '0.00',
+      log.expectedTotalCapital?.toFixed(2) || '0.00',
+      log.netProfit?.toFixed(2) || '0.00',
       log.discrepancy ? 'Yes' : 'No'
     ]);
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  }
+
+  function convertSummaryToCSV(summary, period) {
+    const headers = ['Metric', 'Value'];
+    const rows = [
+      ['Period', period.charAt(0).toUpperCase() + period.slice(1)],
+      ['Total Opening Capital', (summary.totalOpening || 0).toFixed(2)],
+      ['Total Earnings', (summary.totalEarnings || 0).toFixed(2)],
+      ['Total Expenses', (summary.totalExpenses || 0).toFixed(2)],
+      ['Total MTN Float', (summary.totalFloat || 0).toFixed(2)],
+      ['Total Cash In Hand', (summary.totalCash || 0).toFixed(2)],
+      ['Total Expected Capital', (summary.totalExpected || 0).toFixed(2)],
+      ['Total Net Profit', (summary.totalNetProfit || 0).toFixed(2)],
+      ['Discrepancies', summary.discrepancies || 0]
+    ];
     return [headers, ...rows].map(row => row.join(',')).join('\n');
   }
 
@@ -538,6 +554,78 @@ document.addEventListener('DOMContentLoaded', function () {
     nextPageBtn.addEventListener('click', window.nextPage);
   }
 
+  // Notification function
+  function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span class="notification-message">${message}</span>
+        <button class="notification-close">&times;</button>
+      </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10000;
+      max-width: 300px;
+      animation: slideIn 0.3s ease;
+    `;
+    
+    notification.querySelector('.notification-content').style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    `;
+    
+    notification.querySelector('.notification-close').style.cssText = `
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    `;
+    
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Close functionality
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+      notification.remove();
+    });
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 5000);
+    
+    document.body.appendChild(notification);
+  }
+
   // Initial fetch
   fetchLogs();
   fetchSummary();
@@ -547,15 +635,26 @@ document.addEventListener('DOMContentLoaded', function () {
   const exportDropdownBtn = document.getElementById('exportDropdownBtn');
   const exportDropdownMenu = document.getElementById('exportDropdownMenu');
   const exportAllPdfBtn = document.getElementById('exportAllPdfBtn');
+  const exportAllCsvBtn = document.getElementById('exportAllCsvBtn');
   const exportSummaryPdfBtn = document.getElementById('exportSummaryPdfBtn');
+  const exportSummaryCsvBtn = document.getElementById('exportSummaryCsvBtn');
 
   if (exportDropdownBtn && exportDropdownMenu) {
     exportDropdownBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       exportDropdownMenu.style.display = exportDropdownMenu.style.display === 'block' ? 'none' : 'block';
     });
+    
+    // Close dropdown when clicking outside
     document.addEventListener('click', function() {
       exportDropdownMenu.style.display = 'none';
+    });
+    
+    // Close dropdown on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        exportDropdownMenu.style.display = 'none';
+      }
     });
   }
 
@@ -574,90 +673,197 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Improved PDF export helpers
   function logsToPdf(logs, filename) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const title = 'MTN Agent Logs Export';
-    const dateStr = new Date().toLocaleString();
+    try {
+      if (!window.jspdf) {
+        throw new Error('jsPDF library not loaded');
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const title = 'Money Tracker Pro - Transaction Logs';
+      const dateStr = new Date().toLocaleString();
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    doc.setFontSize(16);
-    doc.text(title, 14, 18);
-    doc.setFontSize(10);
-    doc.text(`Exported: ${dateStr}`, 14, 26);
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(0, 79, 113);
+      doc.text(title, 14, 18);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Exported: ${dateStr}`, 14, 26);
+      if (user.name) {
+        doc.text(`User: ${user.name}`, 14, 32);
+      }
 
-    const headers = [['Date', 'Opening Capital', 'Earnings', 'Expenses', 'MTN Float', 'Cash In Hand', 'Expected Total', 'Net Profit', 'Discrepancy']];
-    const rows = logs.map(log => [
-      new Date(log.date).toLocaleDateString(),
-      log.openingCapital,
-      log.earnings,
-      log.expenses,
-      log.mtnFloat,
-      log.cashInHand,
-      log.expectedTotalCapital,
-      log.netProfit,
-      log.discrepancy ? 'Yes' : 'No'
-    ]);
-    doc.autoTable({
-      head: headers,
-      body: rows,
-      startY: 32,
-      styles: { fontSize: 9, cellPadding: 2 },
-      headStyles: { fillColor: [0, 79, 113], textColor: 255 },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      margin: { left: 10, right: 10 }
-    });
-    doc.save(filename);
+      // Table
+      const headers = [['Date', 'Opening Capital', 'Earnings', 'Expenses', 'MTN Float', 'Cash In Hand', 'Expected Total', 'Net Profit', 'Discrepancy']];
+      const rows = logs.map(log => [
+        new Date(log.date).toLocaleDateString(),
+        `$${log.openingCapital?.toFixed(2) || '0.00'}`,
+        `$${log.earnings?.toFixed(2) || '0.00'}`,
+        `$${log.expenses?.toFixed(2) || '0.00'}`,
+        `$${log.mtnFloat?.toFixed(2) || '0.00'}`,
+        `$${log.cashInHand?.toFixed(2) || '0.00'}`,
+        `$${log.expectedTotalCapital?.toFixed(2) || '0.00'}`,
+        `$${log.netProfit?.toFixed(2) || '0.00'}`,
+        log.discrepancy ? 'Yes' : 'No'
+      ]);
+      
+      doc.autoTable({
+        head: headers,
+        body: rows,
+        startY: 40,
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [0, 79, 113], textColor: 255, fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [248, 249, 250] },
+        margin: { left: 10, right: 10 },
+        columnStyles: {
+          0: { cellWidth: 25 },
+          1: { cellWidth: 25 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 20 },
+          4: { cellWidth: 20 },
+          5: { cellWidth: 25 },
+          6: { cellWidth: 25 },
+          7: { cellWidth: 20 },
+          8: { cellWidth: 15 }
+        }
+      });
+      
+      doc.save(filename);
+      showNotification('Export successful!', 'success');
+    } catch (error) {
+      console.error('PDF Export Error:', error);
+      showNotification('Export failed: ' + error.message, 'error');
+    }
   }
 
   function summaryToPdf(summary, period, filename) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const title = `MTN Agent Summary Export (${period.charAt(0).toUpperCase() + period.slice(1)})`;
-    const dateStr = new Date().toLocaleString();
+    try {
+      if (!window.jspdf) {
+        throw new Error('jsPDF library not loaded');
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const title = `Money Tracker Pro - ${period.charAt(0).toUpperCase() + period.slice(1)} Summary`;
+      const dateStr = new Date().toLocaleString();
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    doc.setFontSize(16);
-    doc.text(title, 14, 18);
-    doc.setFontSize(10);
-    doc.text(`Exported: ${dateStr}`, 14, 26);
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(0, 79, 113);
+      doc.text(title, 14, 18);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Exported: ${dateStr}`, 14, 26);
+      if (user.name) {
+        doc.text(`User: ${user.name}`, 14, 32);
+      }
 
-    const headers = [['Period', 'Total Opening', 'Total Earnings', 'Total Expenses', 'Total Float', 'Total Cash', 'Total Expected', 'Total Net Profit', 'Discrepancies']];
-    const row = [[
-      period.charAt(0).toUpperCase() + period.slice(1),
-      summary.totalOpening || 0,
-      summary.totalEarnings || 0,
-      summary.totalExpenses || 0,
-      summary.totalFloat || 0,
-      summary.totalCash || 0,
-      summary.totalExpected || 0,
-      summary.totalNetProfit || 0,
-      summary.discrepancies || 0
-    ]];
-    doc.autoTable({
-      head: headers,
-      body: row,
-      startY: 32,
-      styles: { fontSize: 11, cellPadding: 2 },
-      headStyles: { fillColor: [0, 79, 113], textColor: 255 },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      margin: { left: 10, right: 10 }
-    });
-    doc.save(filename);
+      // Summary table
+      const headers = [['Metric', 'Value']];
+      const rows = [
+        ['Total Opening Capital', `$${(summary.totalOpening || 0).toFixed(2)}`],
+        ['Total Earnings', `$${(summary.totalEarnings || 0).toFixed(2)}`],
+        ['Total Expenses', `$${(summary.totalExpenses || 0).toFixed(2)}`],
+        ['Total MTN Float', `$${(summary.totalFloat || 0).toFixed(2)}`],
+        ['Total Cash In Hand', `$${(summary.totalCash || 0).toFixed(2)}`],
+        ['Total Expected Capital', `$${(summary.totalExpected || 0).toFixed(2)}`],
+        ['Total Net Profit', `$${(summary.totalNetProfit || 0).toFixed(2)}`],
+        ['Discrepancies', summary.discrepancies || 0]
+      ];
+      
+      doc.autoTable({
+        head: headers,
+        body: rows,
+        startY: 40,
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [0, 79, 113], textColor: 255, fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [248, 249, 250] },
+        margin: { left: 10, right: 10 },
+        columnStyles: {
+          0: { cellWidth: 80, fontStyle: 'bold' },
+          1: { cellWidth: 60, halign: 'right' }
+        }
+      });
+      
+      doc.save(filename);
+      showNotification('Summary export successful!', 'success');
+    } catch (error) {
+      console.error('Summary PDF Export Error:', error);
+      showNotification('Summary export failed: ' + error.message, 'error');
+    }
   }
 
-  // Only PDF export logic
+  // Export logic
   if (exportAllPdfBtn) {
     exportAllPdfBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      const res = await fetch('/api/earnings', { headers: getAuthHeaders() });
-      const logs = await res.json();
-      logsToPdf(logs, 'mtn-agent-logs.pdf');
+      try {
+        showNotification('Preparing PDF export...', 'info');
+        const res = await fetch('/api/earnings', { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error('Failed to fetch data');
+        const data = await res.json();
+        logsToPdf(data.earnings || [], 'money-tracker-logs.pdf');
+      } catch (error) {
+        console.error('Export All PDF Error:', error);
+        showNotification('PDF export failed: ' + error.message, 'error');
+      }
     });
   }
+  
+  if (exportAllCsvBtn) {
+    exportAllCsvBtn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      try {
+        showNotification('Preparing CSV export...', 'info');
+        const res = await fetch('/api/earnings', { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error('Failed to fetch data');
+        const data = await res.json();
+        const csv = convertToCSV(data.earnings || []);
+        downloadCSV(csv, 'money-tracker-logs.csv');
+        showNotification('CSV export successful!', 'success');
+      } catch (error) {
+        console.error('Export All CSV Error:', error);
+        showNotification('CSV export failed: ' + error.message, 'error');
+      }
+    });
+  }
+  
   if (exportSummaryPdfBtn) {
     exportSummaryPdfBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      const res = await fetch('/api/earnings/summary?period=today', { headers: getAuthHeaders() });
-      const summary = await res.json();
-      summaryToPdf(summary, 'today', 'mtn-agent-summary-today.pdf');
+      try {
+        showNotification('Preparing summary PDF export...', 'info');
+        const res = await fetch('/api/earnings/summary?period=today', { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error('Failed to fetch summary data');
+        const summary = await res.json();
+        summaryToPdf(summary, 'today', 'money-tracker-summary-today.pdf');
+      } catch (error) {
+        console.error('Export Summary PDF Error:', error);
+        showNotification('Summary PDF export failed: ' + error.message, 'error');
+      }
+    });
+  }
+  
+  if (exportSummaryCsvBtn) {
+    exportSummaryCsvBtn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      try {
+        showNotification('Preparing summary CSV export...', 'info');
+        const res = await fetch('/api/earnings/summary?period=today', { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error('Failed to fetch summary data');
+        const summary = await res.json();
+        const csv = convertSummaryToCSV(summary, 'today');
+        downloadCSV(csv, 'money-tracker-summary-today.csv');
+        showNotification('Summary CSV export successful!', 'success');
+      } catch (error) {
+        console.error('Export Summary CSV Error:', error);
+        showNotification('Summary CSV export failed: ' + error.message, 'error');
+      }
     });
   }
 }); 

@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update header
         if (userInfoElement) {
-            userInfoElement.textContent = `Welcome, ${newFullName}`;
+            userInfoElement.textContent = `${newFullName}`;
         }
         
         showToast('Profile updated successfully', 'success');

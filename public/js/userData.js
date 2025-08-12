@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // User is logged in - show user info
         if (userInfoElement) {
             const userName = userData.name || userData.firstName || userData.email || 'User';
-            userInfoElement.textContent = `Welcome, ${userName}`;
+            userInfoElement.textContent = `${userName}`;
         }
         
         // Show user section
@@ -83,7 +83,7 @@ function updateUserDisplay() {
     
     if (userInfoElement && userData && Object.keys(userData).length > 0) {
         const userName = userData.name || userData.firstName || userData.email || 'User';
-        userInfoElement.textContent = `Welcome, ${userName}`;
+        userInfoElement.textContent = `${userName}`;
     }
 }
 
