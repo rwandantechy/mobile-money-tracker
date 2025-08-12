@@ -223,59 +223,6 @@ body {
   text-align: center;
 }
 
-/* Auth buttons for non-logged in users */
-.auth-buttons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.auth-buttons .btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.auth-buttons .btn-outline {
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
-  background: transparent;
-}
-
-.auth-buttons .btn-outline:hover {
-  background: var(--primary-color);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-.auth-buttons .btn-primary {
-  background: var(--gradient-primary);
-  color: white;
-  border: none;
-  box-shadow: var(--shadow);
-}
-
-.auth-buttons .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-/* User avatar styles */
-.user-avatar {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--primary-color);
-}
-
 /* Main Content */
 .landing-main {
   flex: 1;
@@ -908,7 +855,7 @@ body {
   margin-bottom: 1rem;
 }
 
-
+/* Username and password fields side by side */
 .register-section .credentials-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1694,7 +1641,13 @@ body {
   color: var(--white) !important;
 }
 /* hero section */
-
+.hero-image-bg {
+  background-image: url("images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: var(--white);
+}
 
 .hero-overlay {
   position: absolute;
@@ -1702,13 +1655,12 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to right, white, #ffcd057c, white); 
+  background: #ffcd057c; 
   z-index: 1;
 }
 
 .hero-image-bg .hero-content {
   position: relative;
- 
   z-index: 2;
 }
 
@@ -1716,9 +1668,8 @@ body {
 .hero-image-bg .hero-subtitle,
 .hero-image-bg .stat-number,
 .hero-image-bg .stat-label {
-
+  color: var(--white);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  color: black; 
 }
 
 .hero-image-bg .hero-title {
