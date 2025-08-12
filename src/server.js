@@ -102,7 +102,7 @@ app.use('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
         res.status(404).json({ error: 'API endpoint not found' });
     } else {
-        res.sendFile(path.join(__dirname, '../public/pages/index.html'));
+        res.status(404).sendFile(path.join(__dirname, '../public/pages/404.html'));
     }
 });
 
