@@ -30,7 +30,7 @@ A web application for tracking mobile money transactions and managing finances.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/mobile-money-tracker.git
+git clone https://github.com/rwandantechy/mobile-money-tracker.git
 cd mobile-money-tracker
 ```
 
