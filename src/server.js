@@ -6,6 +6,7 @@ const path = require('path');
 const earningsRouter = require('./routes/earnings');
 const authRouter = require('./routes/auth');
 const auth = require('./middleware/auth');
+const webAuth = require('./middleware/webAuth');
 
 const app = express();
 const PORT = process.env.PORT || 6000;
@@ -21,16 +22,28 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/login.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/login.html'));
 });
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/register.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/register.html'));
 });
 
 // Protected routes (auth required)
-app.get('/app', auth, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/app.html'));
+app.get('/app', webAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+});
+
+app.get('/dashboard', webAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+});
+
+app.get('/profile', webAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/profile.html'));
+});
+
+app.get('/settings', webAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/settings.html'));
 });
 
 // API routes

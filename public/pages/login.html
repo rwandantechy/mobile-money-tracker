@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Money Tracker Pro</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body >
+    <div class="container">
+        <header class="landing-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>
+                        <a href="/" class="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:0.75rem;">
+                            <i class="fas fa-wallet" aria-hidden="true"></i>
+                            <span class="logo-text">Money Tracker <span class="pro-badge">Pro</span></span>
+                        </a>
+                    </h1>
+                    <p class="tagline">Professional Mobile Money Management</p>
+                </div>
+                <nav class="user-section" aria-label="User menu">
+                    <span id="userInfo" class="welcome-text">Welcome, Guest</span>
+                    <button id="logoutBtn" class="logout-btn hidden">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                    <div class="profile-dropdown-container">
+                        <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
+                            <i class="fas fa-user-circle"></i>
+                        </button>
+                        <nav id="profileDropdown" class="profile-dropdown" aria-label="Profile menu">
+                            <a href="/profile">
+                                <i class="fas fa-user"></i>
+                                View Profile
+                            </a>
+                            <a href="/settings">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <a href="/logout" class="logout-link">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </nav>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="auth-section login-section">
+                <div class="auth-header">
+                    <div class="auth-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <h2>Welcome Back</h2>
+                    <p class="auth-subtitle">Sign in to your Money Tracker Pro account</p>
+                </div>
+                
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+
+                <div class="social-auth">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p class="auth-link">
+                        Don't have an account? <a href="/register">Create one now</a>
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="/js/auth.js"></script>
+    <script src="/js/dropdown.js"></script>
+</body>
+</html> 

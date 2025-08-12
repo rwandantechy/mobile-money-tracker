@@ -67,6 +67,15 @@ exports.verifyOtp = async (req, res) => {
     await user.clearOTP();
     await user.save();
     const token = generateToken(user);
+    
+    // Set token as HTTP-only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    
     res.status(200).json({
       token,
       user: {
@@ -95,6 +104,15 @@ exports.login = async (req, res) => {
     }
     await user.updateLastLogin();
     const token = generateToken(user);
+    
+    // Set token as HTTP-only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    
     res.status(200).json({
       token,
       user: {
@@ -186,6 +204,17 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     console.error('Profile update error:', error);
     res.status(500).json({ message: 'Error updating profile' });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Error during logout' });
   }
 };
 

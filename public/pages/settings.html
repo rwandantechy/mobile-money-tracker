@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - Money Tracker Pro</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="css/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="landing-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <h1>
+            <a href="/" class="logo-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:0.75rem;">
+              <i class="fas fa-wallet" aria-hidden="true"></i>
+              <span class="logo-text">Money Tracker <span class="pro-badge">Pro</span></span>
+            </a>
+          </h1>
+          <p class="tagline">Professional Mobile Money Management</p>
+        </div>
+        <nav class="user-section" aria-label="User menu">
+          <span id="userInfo" class="welcome-text">Welcome,Cedro</span>
+          
+          <div class="profile-dropdown-container">
+            <button id="profileIcon" class="profile-icon-btn" aria-haspopup="true" aria-expanded="false" aria-label="Profile options">
+              <i class="fas fa-user-circle"></i>
+            </button>
+            <nav id="profileDropdown" class="profile-dropdown" aria-label="Profile menu">
+              <a href="/profile.html">
+                <i class="fas fa-user"></i>
+                View Profile
+              </a>
+              <a href="/settings.html">
+                <i class="fas fa-cog"></i>
+                Settings
+              </a>
+              <a href="/logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+              </a>
+            </nav>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section class="settings-section auth-section">
+        <div class="auth-header">
+          <div class="auth-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <h2>Settings</h2>
+          <p class="auth-subtitle">Manage your preferences and account settings</p>
+        </div>
+        <form id="settingsForm" class="auth-form">
+          <!-- Account Section -->
+          <div class="settings-group">
+            <h3 class="settings-title"><i class="fas fa-user"></i> Account</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" name="email" value="user@email.com" disabled>
+              </div>
+              <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Phone</label>
+                <input type="tel" id="phone" name="phone" value="+1234567890" disabled>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="changePassword"><i class="fas fa-lock"></i> Change Password</label>
+                <input type="password" id="changePassword" name="changePassword" placeholder="New password">
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm New Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+              </div>
+            </div>
+          </div>
+
+          <!-- Notifications Section -->
+          <div class="settings-group">
+            <h3 class="settings-title"><i class="fas fa-bell"></i> Notifications</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="emailNotifications"><i class="fas fa-envelope-open-text"></i> Email Notifications</label>
+                <select id="emailNotifications" name="emailNotifications">
+                  <option value="all">All</option>
+                  <option value="important">Only Important</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="smsNotifications"><i class="fas fa-sms"></i> SMS Notifications</label>
+                <select id="smsNotifications" name="smsNotifications">
+                  <option value="all">All</option>
+                  <option value="important">Only Important</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pushNotifications"><i class="fas fa-bell"></i> Push Notifications</label>
+                <select id="pushNotifications" name="pushNotifications">
+                  <option value="all">All</option>
+                  <option value="important">Only Important</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Section -->
+          <div class="settings-group">
+            <h3 class="settings-title"><i class="fas fa-shield-alt"></i> Security</h3>
+            <div class="form-group form-switch">
+              <label for="twoFactor"><i class="fas fa-lock"></i> Two-Factor Authentication (2FA)</label>
+              <input type="checkbox" id="twoFactor" name="twoFactor">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-history"></i> Recent Logins</label>
+              <ul class="recent-logins">
+                <li><i class="fas fa-desktop"></i> Web - Accra, Ghana <span class="login-time">Today, 10:23 AM</span></li>
+                <li><i class="fas fa-mobile-alt"></i> Mobile - Kumasi, Ghana <span class="login-time">Yesterday, 8:15 PM</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Preferences Section -->
+          <div class="settings-group">
+            <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Preferences</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="theme"><i class="fas fa-palette"></i> Theme</label>
+                <select id="theme" name="theme">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="system">System Default</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="language"><i class="fas fa-language"></i> Language</label>
+                <select id="language" name="language">
+                  <option value="en">English</option>
+                  <option value="fr">French</option>
+                  <option value="sw">Swahili</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-save"></i>
+            <span>Save Settings</span>
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="/js/app.js"></script>
+  <script src="/js/dropdown.js"></script>
+</body>
+</html>
