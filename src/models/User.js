@@ -53,7 +53,11 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: 'https://innocentn.vercel.app/images/profile-pic.png',
+    default: function() {
+      // Generate avatar URL using DiceBear API with initials
+      const initials = `${this.firstName?.charAt(0) || 'U'}${this.lastName?.charAt(0) || 'S'}`;
+      return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(initials)}&backgroundColor=004F71&textColor=ffffff&size=200`;
+    },
   },
   isActive: {
     type: Boolean,
@@ -85,6 +89,12 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving if modified
 userSchema.pre('save', async function (next) {
+  // Update avatar when name changes
+  if (this.isModified('firstName') || this.isModified('lastName')) {
+    this.profilePicture = this.generateAvatar();
+  }
+
+  // Hash password if modified
   if (!this.isModified('password')) return next();
 
   try {
@@ -135,6 +145,14 @@ userSchema.methods.updateLastLogin = function () {
   this.lastLogin = new Date();
   return this.save();
 };
+
+// Generate avatar URL based on user initials
+userSchema.methods.generateAvatar = function () {
+  const initials = `${this.firstName?.charAt(0) || 'U'}${this.lastName?.charAt(0) || 'S'}`;
+  return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(initials)}&backgroundColor=004F71&textColor=ffffff&size=200`;
+};
+
+
 
 // Virtual for fullName
 userSchema.virtual('fullName').get(function() {

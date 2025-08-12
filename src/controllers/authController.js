@@ -84,8 +84,12 @@ exports.verifyOtp = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
         fullName: user.fullName,
+        phone: user.phone,
         role: user.role,
+        profilePicture: user.profilePicture,
       }
     });
   } catch (error) {
@@ -192,8 +196,12 @@ exports.getProfile = async (req, res) => {
     res.status(200).json({
       id: user._id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       fullName: user.fullName,
+      phone: user.phone,
       role: user.role,
+      profilePicture: user.profilePicture,
     });
   } catch (error) {
     console.error('Profile fetch error:', error);
@@ -203,17 +211,32 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { fullName } = req.body;
+    const { firstName, lastName, phone } = req.body;
+    const updateData = {};
+    
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+    if (phone) updateData.phone = phone;
+    
     const user = await User.findByIdAndUpdate(
       req.user.userId,
-      { fullName },
-      { new: true }
+      updateData,
+      { new: true, runValidators: true }
     );
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
     res.status(200).json({
       id: user._id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       fullName: user.fullName,
+      phone: user.phone,
       role: user.role,
+      profilePicture: user.profilePicture,
     });
   } catch (error) {
     console.error('Profile update error:', error);
