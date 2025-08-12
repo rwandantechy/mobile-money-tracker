@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update header user info
     if (userInfoElement) {
-        const userName = userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.email || 'User';
-        userInfoElement.textContent = `Welcome, ${userName}`;
+        const userName = `${userData.firstName || ''} `;
+        userInfoElement.textContent = ` ${userName}`;
     }
     
     // Load user profile data from localStorage

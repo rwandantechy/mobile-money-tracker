@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
             profileDropdownContainer.style.display = 'block';
         }
         
+        // Handle profile image if available
+        if (userData.profilePicture) {
+            const profileIcon = document.getElementById('profileIcon');
+            if (profileIcon) {
+                profileIcon.innerHTML = `<img src="${userData.profilePicture}" alt="Profile" class="profile-image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">`;
+            }
+        }
+        
     } else {
         // User is not logged in
         if (userInfo) userInfo.style.display = 'none';

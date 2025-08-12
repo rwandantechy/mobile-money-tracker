@@ -246,6 +246,14 @@ body {
   color: var(--primary-color);
 }
 
+.profile-icon-btn .profile-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
 .profile-dropdown {
   display: none;
   position: absolute;
