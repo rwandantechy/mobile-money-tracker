@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Public routes (no auth required)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/index.html'));
 });
 
 app.get('/login', (req, res) => {
@@ -40,11 +40,11 @@ app.get('/register', (req, res) => {
 
 // Protected routes (auth required)
 app.get('/app', webAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/dashboard.html'));
 });
 
 app.get('/dashboard', webAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/dashboard.html'));
 });
 
 app.get('/profile', webAuth, (req, res) => {
@@ -53,6 +53,19 @@ app.get('/profile', webAuth, (req, res) => {
 
 app.get('/settings', webAuth, (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/settings.html'));
+});
+
+// Additional routes for other pages
+app.get('/otp-verification', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/otp-verification.html'));
+});
+
+app.get('/password-reset', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/password-reset.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/reset-password.html'));
 });
 
 // API routes
