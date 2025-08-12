@@ -1424,21 +1424,23 @@ body {
 .dashboard-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 2rem;
-  gap: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--gray-200);
 }
 
 .dashboard-title h2 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-color);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .dashboard-subtitle {
   color: var(--text-light);
-  font-size: 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .dashboard-actions {
@@ -1448,21 +1450,23 @@ body {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
 }
 
 .stat-card {
   background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-200);
   display: flex;
   align-items: center;
   gap: 1rem;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card:hover {
@@ -1471,10 +1475,10 @@ body {
 }
 
 .stat-icon {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   background: var(--gradient-primary);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1482,7 +1486,7 @@ body {
 }
 
 .stat-icon i {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: white;
 }
 
