@@ -13,8 +13,8 @@ exports.getAllEarnings = async (req, res) => {
       sortOrder = 'desc'
     } = req.query;
 
-    // Build query
-    let query = {};
+    // Build query - filter by authenticated user
+    let query = { user: req.user._id };
     
     // Date range filtering
     if (startDate || endDate) {
@@ -67,6 +67,7 @@ exports.getAllEarnings = async (req, res) => {
 // Create a new earning log (per day)
 exports.createEarning = async (req, res) => {
   const earning = new Earning({
+    user: req.user._id,
     date: req.body.date,
     openingCapital: req.body.openingCapital,
     earnings: req.body.earnings,
@@ -100,6 +101,7 @@ exports.getSummary = async (req, res) => {
     }
 
     const earnings = await Earning.find({
+      user: req.user._id,
       date: { $gte: startDate }
     });
 
@@ -124,7 +126,15 @@ exports.getSummary = async (req, res) => {
 // Delete an earning log by ID
 exports.deleteEarning = async (req, res) => {
   try {
-    await Earning.findByIdAndDelete(req.params.id);
+    const earning = await Earning.findOneAndDelete({ 
+      _id: req.params.id, 
+      user: req.user._id 
+    });
+    
+    if (!earning) {
+      return res.status(404).json({ message: 'Earning not found' });
+    }
+    
     res.json({ message: 'Earning deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -134,7 +144,10 @@ exports.deleteEarning = async (req, res) => {
 // Update an earning log by ID (per day)
 exports.updateEarning = async (req, res) => {
   try {
-    const earning = await Earning.findById(req.params.id);
+    const earning = await Earning.findOne({ 
+      _id: req.params.id, 
+      user: req.user._id 
+    });
     if (!earning) {
       return res.status(404).json({ message: 'Earning not found' });
     }
@@ -157,7 +170,10 @@ exports.updateEarning = async (req, res) => {
 // Get a single earning log by ID
 exports.getEarningById = async (req, res) => {
   try {
-    const earning = await Earning.findById(req.params.id);
+    const earning = await Earning.findOne({ 
+      _id: req.params.id, 
+      user: req.user._id 
+    });
     if (!earning) {
       return res.status(404).json({ message: 'Earning not found' });
     }

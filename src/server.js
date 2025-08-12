@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const earningsRouter = require('./routes/earnings');
 const authRouter = require('./routes/auth');
@@ -12,8 +13,16 @@ const app = express();
 const PORT = process.env.PORT || 6000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://yourdomain.com'] // Replace with your actual domain
+    : ['http://localhost:4000', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Public routes (no auth required)

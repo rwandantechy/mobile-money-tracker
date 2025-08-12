@@ -54,6 +54,9 @@ exports.register = async (req, res) => {
 };
 
 exports.verifyOtp = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   const { email, otp } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -68,7 +71,7 @@ exports.verifyOtp = async (req, res) => {
     await user.save();
     const token = generateToken(user);
     
-    // Set token as HTTP-only cookie
+    // Set token as HTTP-only cookie for web routes
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -77,7 +80,7 @@ exports.verifyOtp = async (req, res) => {
     });
     
     res.status(200).json({
-      token,
+      token, // Also return token in response body for frontend localStorage
       user: {
         id: user._id,
         email: user.email,
@@ -92,6 +95,9 @@ exports.verifyOtp = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select('+password');
@@ -105,7 +111,7 @@ exports.login = async (req, res) => {
     await user.updateLastLogin();
     const token = generateToken(user);
     
-    // Set token as HTTP-only cookie
+    // Set token as HTTP-only cookie for web routes
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -114,7 +120,7 @@ exports.login = async (req, res) => {
     });
     
     res.status(200).json({
-      token,
+      token, // Also return token in response body for frontend localStorage
       user: {
         id: user._id,
         email: user.email,
@@ -131,6 +137,9 @@ exports.login = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -153,6 +162,9 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   const { email, otp, newPassword } = req.body;
   try {
     const user = await User.findOne({ email });

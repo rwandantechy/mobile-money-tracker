@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
+    select: false,
   },
   firstName: {
     type: String,
@@ -134,5 +135,14 @@ userSchema.methods.updateLastLogin = function () {
   this.lastLogin = new Date();
   return this.save();
 };
+
+// Virtual for fullName
+userSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+
+// Ensure virtual fields are serialized
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('User', userSchema);

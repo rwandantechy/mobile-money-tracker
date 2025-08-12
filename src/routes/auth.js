@@ -14,11 +14,27 @@ router.post('/register', [
   body('phone').notEmpty(),
 ], authController.register);
 
-router.post('/verify-otp', authController.verifyOtp);
-router.post('/login', authController.login);
+router.post('/verify-otp', [
+  body('email').isEmail(),
+  body('otp').isLength({ min: 6, max: 6 }).isNumeric(),
+], authController.verifyOtp);
+
+router.post('/login', [
+  body('email').isEmail(),
+  body('password').notEmpty(),
+], authController.login);
+
 router.post('/logout', authController.logout);
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
+
+router.post('/forgot-password', [
+  body('email').isEmail(),
+], authController.forgotPassword);
+
+router.post('/reset-password', [
+  body('email').isEmail(),
+  body('otp').isLength({ min: 6, max: 6 }).isNumeric(),
+  body('newPassword').isLength({ min: 6 }),
+], authController.resetPassword);
 router.get('/profile', authMiddleware, authController.getProfile);
 router.put('/profile', authMiddleware, authController.updateProfile);
 router.delete('/profile', authMiddleware, authController.deleteProfile);
