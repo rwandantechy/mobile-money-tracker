@@ -30,16 +30,16 @@
         </a>
       </nav>
       <div class="admin-sidebar-footer">
-        <span class="admin-status-dot" aria-hidden="true"></span>
-        <span>Platform analytics</span>
+        <i class="fas fa-shield-halved" aria-hidden="true"></i>
+        <span>Administrator access</span>
       </div>
     </aside>
 
     <main class="admin-main">
       <header class="admin-topbar">
         <div>
-          <p class="admin-eyebrow">PLATFORM MANAGEMENT</p>
-          <h1>Overview</h1>
+          <p class="admin-eyebrow">WORKSPACE</p>
+          <h1>Administration</h1>
         </div>
         <div class="admin-topbar-actions">
           <span id="lastUpdated" class="admin-updated">Loading data…</span>
@@ -53,75 +53,121 @@
       </header>
 
       <div class="admin-content">
-        <section class="admin-welcome" aria-labelledby="welcomeTitle">
+        <section class="admin-page-heading" aria-labelledby="pageTitle">
           <div>
-            <p class="admin-eyebrow">YOUR BUSINESS AT A GLANCE</p>
-            <h2 id="welcomeTitle">A clearer view of your platform.</h2>
-            <p>Aggregated activity across merchant accounts. Personal account details are not shown here.</p>
+            <p class="admin-eyebrow">PLATFORM OVERVIEW</p>
+            <h2 id="pageTitle">Admin dashboard</h2>
+            <p>Platform activity and merchant account health in one place.</p>
           </div>
-          <div class="admin-welcome-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></div>
+          <span class="admin-period-pill">
+            <i class="fas fa-calendar-days" aria-hidden="true"></i>
+            Last 30 days
+          </span>
         </section>
 
         <p id="overviewMessage" class="admin-message" role="status" aria-live="polite"></p>
 
-        <section class="admin-metrics" aria-label="Account metrics" aria-busy="true" id="accountMetrics">
-          <article class="admin-metric-card">
-            <div class="admin-metric-icon icon-blue"><i class="fas fa-users" aria-hidden="true"></i></div>
-            <p>Total accounts</p>
-            <strong id="totalUsers">—</strong>
-            <span>Registered accounts</span>
+        <section class="admin-metrics" aria-label="Platform performance" aria-busy="true" id="accountMetrics">
+          <article class="admin-metric-card metric-earnings">
+            <div class="admin-metric-heading">
+              <p>Gross earnings</p>
+              <span class="admin-metric-icon icon-blue"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i></span>
+            </div>
+            <strong id="periodEarnings">—</strong>
+            <span>Recorded over the last 30 days</span>
           </article>
           <article class="admin-metric-card">
-            <div class="admin-metric-icon icon-green"><i class="fas fa-user-check" aria-hidden="true"></i></div>
-            <p>Active accounts</p>
+            <div class="admin-metric-heading">
+              <p>Net profit</p>
+              <span class="admin-metric-icon icon-green"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span>
+            </div>
+            <strong id="netProfit">—</strong>
+            <span>Earnings less recorded expenses</span>
+          </article>
+          <article class="admin-metric-card">
+            <div class="admin-metric-heading">
+              <p>Daily logs</p>
+              <span class="admin-metric-icon icon-yellow"><i class="fas fa-receipt" aria-hidden="true"></i></span>
+            </div>
+            <strong id="totalRecords">—</strong>
+            <span>Submitted over the last 30 days</span>
+          </article>
+          <article class="admin-metric-card">
+            <div class="admin-metric-heading">
+              <p>Active accounts</p>
+              <span class="admin-metric-icon icon-purple"><i class="fas fa-user-check" aria-hidden="true"></i></span>
+            </div>
             <strong id="activeUsers">—</strong>
-            <span>Available to use the platform</span>
-          </article>
-          <article class="admin-metric-card">
-            <div class="admin-metric-icon icon-yellow"><i class="fas fa-envelope" aria-hidden="true"></i></div>
-            <p>Verified accounts</p>
-            <strong id="verifiedUsers">—</strong>
-            <span>Completed email verification</span>
-          </article>
-          <article class="admin-metric-card">
-            <div class="admin-metric-icon icon-purple"><i class="fas fa-user-plus" aria-hidden="true"></i></div>
-            <p>New in last 30 days</p>
-            <strong id="newUsers">—</strong>
-            <span>Accounts created in the last 30 days</span>
+            <span>Currently available to use the platform</span>
           </article>
         </section>
 
-        <section class="admin-lower-grid">
+        <section class="admin-dashboard-grid">
           <article class="admin-panel admin-chart-panel">
             <div class="admin-panel-heading">
               <div>
-                <p class="admin-eyebrow">LAST 30 DAYS</p>
-                <h2>Daily recorded earnings</h2>
+                <p class="admin-eyebrow">EARNINGS TREND</p>
+                <h2>Daily gross earnings</h2>
               </div>
-              <span class="admin-period-badge"><i class="fas fa-calendar-days" aria-hidden="true"></i> 30 days</span>
+              <span class="admin-chart-unit">RWF</span>
             </div>
-            <p class="admin-chart-total" id="periodEarnings">—</p>
-            <div id="trendChart" class="admin-trend-chart" role="img" aria-label="Daily recorded earnings over the last 30 days"></div>
+            <p class="admin-chart-description">Daily totals from merchant closing logs</p>
+            <div class="admin-chart-frame">
+              <div class="admin-chart-scale" aria-hidden="true">
+                <span id="chartMax">—</span>
+                <span>0</span>
+              </div>
+              <div id="trendChart" class="admin-trend-chart" role="img" aria-label="Daily gross earnings over the last 30 days"></div>
+            </div>
             <div class="admin-chart-axis" aria-hidden="true"><span>30 days ago</span><span>Today</span></div>
           </article>
 
-          <article class="admin-panel admin-activity-panel">
-            <div class="admin-panel-heading">
-              <div>
-                <p class="admin-eyebrow">LAST 30 DAYS</p>
-                <h2>Business activity</h2>
+          <div class="admin-side-panels">
+            <article class="admin-panel admin-account-panel">
+              <div class="admin-panel-heading">
+                <div>
+                  <p class="admin-eyebrow">MERCHANTS</p>
+                  <h2>Account health</h2>
+                </div>
+                <span class="admin-panel-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
               </div>
-              <span class="admin-panel-icon"><i class="fas fa-receipt" aria-hidden="true"></i></span>
-            </div>
-            <div class="admin-detail-row"><span>Daily logs</span><strong id="totalRecords">—</strong></div>
-            <div class="admin-detail-row"><span>Earnings recorded</span><strong id="totalEarnings">—</strong></div>
-            <div class="admin-detail-row"><span>Expenses recorded</span><strong id="totalExpenses">—</strong></div>
-            <div class="admin-detail-row"><span>Net profit recorded</span><strong id="netProfit">—</strong></div>
-            <div class="admin-alert-row">
-              <span><i class="fas fa-circle-exclamation" aria-hidden="true"></i> Logs with balance discrepancies</span>
-              <strong id="discrepancies">—</strong>
-            </div>
-          </article>
+              <div class="admin-account-total">
+                <strong id="totalUsers">—</strong>
+                <span>Registered accounts</span>
+              </div>
+              <p class="admin-account-growth"><strong id="newUsers">—</strong> new in the last 30 days</p>
+              <div class="admin-health-row">
+                <div><span>Active</span><strong id="activeUsersDetail">—</strong></div>
+                <div class="admin-health-status">
+                  <div class="admin-progress-track"><span id="activeProgress"></span></div>
+                  <small id="activeRate">0%</small>
+                </div>
+              </div>
+              <div class="admin-health-row">
+                <div><span>Verified</span><strong id="verifiedUsers">—</strong></div>
+                <div class="admin-health-status">
+                  <div class="admin-progress-track"><span id="verifiedProgress"></span></div>
+                  <small id="verifiedRate">0%</small>
+                </div>
+              </div>
+            </article>
+
+            <article class="admin-panel admin-financial-panel">
+              <div class="admin-panel-heading">
+                <div>
+                  <p class="admin-eyebrow">LAST 30 DAYS</p>
+                  <h2>Financial checks</h2>
+                </div>
+                <span class="admin-panel-icon"><i class="fas fa-scale-balanced" aria-hidden="true"></i></span>
+              </div>
+              <div class="admin-detail-row"><span>Expenses recorded</span><strong id="totalExpenses">—</strong></div>
+              <div class="admin-alert-row">
+                <span><i class="fas fa-circle-exclamation" aria-hidden="true"></i> Balance discrepancies</span>
+                <strong id="discrepancies">—</strong>
+              </div>
+              <p class="admin-panel-note">Discrepancies are flagged when closing balances do not match expected totals.</p>
+            </article>
+          </div>
         </section>
 
         <footer class="admin-footer">

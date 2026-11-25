@@ -4,6 +4,14 @@ const formatMoney = new Intl.NumberFormat('en-RW', {
   currency: 'RWF',
   maximumFractionDigits: 0
 });
+const formatCompact = new Intl.NumberFormat('en-RW', {
+  notation: 'compact',
+  maximumFractionDigits: 1
+});
+const formatPercent = new Intl.NumberFormat('en-RW', {
+  style: 'percent',
+  maximumFractionDigits: 0
+});
 
 const overviewMessage = document.getElementById('overviewMessage');
 const metricsSection = document.getElementById('accountMetrics');
@@ -18,21 +26,24 @@ function renderTrend(trend) {
   if (!chart) return;
 
   const values = Array.isArray(trend) ? trend : [];
+  const valuesByDate = new Map(values.map(item => [item.date, item]));
   const today = new Date();
   const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 29));
   const dailyValues = Array.from({ length: 30 }, (_, index) => {
     const date = new Date(start);
     date.setUTCDate(start.getUTCDate() + index);
     const key = date.toISOString().slice(0, 10);
-    const record = values.find(item => item.date === key);
+    const record = valuesByDate.get(key);
     return {
       date,
       earnings: Number(record?.earnings) || 0
     };
   });
-  const maxEarnings = Math.max(1, ...dailyValues.map(day => day.earnings));
+  const peakEarnings = Math.max(0, ...dailyValues.map(day => day.earnings));
+  const chartScale = peakEarnings || 1;
 
   chart.replaceChildren();
+  document.getElementById('chartMax').textContent = formatCompact.format(peakEarnings);
   dailyValues.forEach((day, index) => {
     const column = document.createElement('span');
     column.className = 'admin-trend-column';
@@ -41,7 +52,7 @@ function renderTrend(trend) {
 
     const bar = document.createElement('span');
     bar.className = 'admin-trend-bar';
-    bar.style.height = `${day.earnings > 0 ? Math.max(5, (day.earnings / maxEarnings) * 100) : 2}%`;
+    bar.style.height = `${day.earnings > 0 ? Math.max(4, (day.earnings / chartScale) * 100) : 1}%`;
     if (index === dailyValues.length - 1) bar.classList.add('is-today');
     column.appendChild(bar);
     chart.appendChild(column);
@@ -86,16 +97,28 @@ async function loadOverview() {
     }
 
     const data = await response.json();
-    setValue('totalUsers', data.users?.total);
-    setValue('activeUsers', data.users?.active);
-    setValue('verifiedUsers', data.users?.verified);
+    const totalUsers = Number(data.users?.total) || 0;
+    const activeUsers = Number(data.users?.active) || 0;
+    const verifiedUsers = Number(data.users?.verified) || 0;
+
+    setValue('totalUsers', totalUsers);
+    setValue('activeUsers', activeUsers);
+    setValue('activeUsersDetail', activeUsers);
+    setValue('verifiedUsers', verifiedUsers);
     setValue('newUsers', data.users?.newLast30Days);
     setValue('totalRecords', data.earnings?.records);
-    setValue('totalEarnings', data.earnings?.totalEarnings, formatMoney);
     setValue('totalExpenses', data.earnings?.totalExpenses, formatMoney);
     setValue('netProfit', data.earnings?.netProfit, formatMoney);
     setValue('discrepancies', data.earnings?.discrepancies);
     setValue('periodEarnings', data.earnings?.totalEarnings, formatMoney);
+    const activeRate = totalUsers ? Math.min(1, activeUsers / totalUsers) : 0;
+    const verifiedRate = totalUsers ? Math.min(1, verifiedUsers / totalUsers) : 0;
+    document.getElementById('activeProgress').style.width =
+      `${activeRate * 100}%`;
+    document.getElementById('verifiedProgress').style.width =
+      `${verifiedRate * 100}%`;
+    document.getElementById('activeRate').textContent = formatPercent.format(activeRate);
+    document.getElementById('verifiedRate').textContent = formatPercent.format(verifiedRate);
     renderTrend(data.dailyTrend);
 
     const updatedAt = new Date(data.generatedAt);
