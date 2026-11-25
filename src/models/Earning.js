@@ -72,6 +72,9 @@ const earningSchema = new mongoose.Schema({
   timestamps: true
 });
 
+earningSchema.index({ user: 1, date: -1 });
+earningSchema.index({ date: 1 });
+
 // Calculate netProfit, expectedTotalCapital, and flag discrepancies before saving
 earningSchema.pre('save', function(next) {
   this.expectedTotalCapital = this.openingCapital + this.earnings - this.expenses;

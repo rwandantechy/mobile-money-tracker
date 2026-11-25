@@ -8,6 +8,14 @@ document.body.classList.add('auth-loading');
  */
 function checkAuth() {
     const token = localStorage.getItem('token');
+    let user = {};
+    try {
+        const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        if (storedUser && typeof storedUser === 'object') user = storedUser;
+    } catch (error) {
+        localStorage.removeItem('user');
+    }
+    const defaultPath = user.role === 'admin' ? '/admin' : '/dashboard';
     const path = window.location.pathname;
 
     // Remove loading class first
@@ -21,7 +29,7 @@ function checkAuth() {
             path === '/register' || 
             path === '/otp-verification'
         ) {
-            window.location.replace('/dashboard');
+            window.location.replace(defaultPath);
         }
     } else {
         // If no token and we're on a protected page, redirect to login
@@ -120,7 +128,7 @@ if (loginForm) {
                 // Token is now stored in cookie by the server
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.replace('/dashboard');
+                window.location.replace(data.user?.role === 'admin' ? '/admin' : '/dashboard');
             } else {
                 alert(data.message || 'Login failed');
             }

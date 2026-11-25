@@ -3,9 +3,7 @@ const User = require('../models/User');
 
 const webAuth = async (req, res, next) => {
   try {
-    // Check for token in multiple places
     let token = req.cookies?.token || 
-                req.query?.token || 
                 req.headers?.authorization?.replace('Bearer ', '');
     
     if (!token) {

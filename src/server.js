@@ -5,8 +5,10 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const earningsRouter = require('./routes/earnings');
 const authRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
 const auth = require('./middleware/auth');
 const webAuth = require('./middleware/webAuth');
+const { requireAdmin, requireAdminPage } = require('./middleware/requireAdmin');
 const connectToDatabase = require('./utils/database');
 
 const app = express();
@@ -80,6 +82,10 @@ app.get('/settings', webAuth, (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/settings.html'));
 });
 
+app.get('/admin', webAuth, requireAdminPage, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views/admin.html'));
+});
+
 // Additional routes for other pages
 app.get('/otp-verification', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/otp-verification.html'));
@@ -96,6 +102,7 @@ app.get('/reset-password', (req, res) => {
 // API routes
 app.use('/api/auth', authRouter);
 app.use('/api/earnings', auth, earningsRouter);
+app.use('/api/admin', auth, requireAdmin, adminRouter);
 
 // 404 handler for deployment
 app.use('*', (req, res) => {

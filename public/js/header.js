@@ -3,9 +3,19 @@
  * Dynamically manages header content based on authentication state and page context
  */
 
+function getStoredUser() {
+    try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        return user && typeof user === 'object' ? user : {};
+    } catch (error) {
+        localStorage.removeItem('user');
+        return {};
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const token = localStorage.getItem('token');
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userData = getStoredUser();
     const path = window.location.pathname;
     
     // Get DOM elements
@@ -31,6 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show profile dropdown
         if (profileDropdownContainer) {
             profileDropdownContainer.style.display = 'block';
+        }
+
+        if (userData.role === 'admin' && profileDropdown && !profileDropdown.querySelector('a[href="/admin"]')) {
+            const adminLink = document.createElement('a');
+            adminLink.href = '/admin';
+            const adminIcon = document.createElement('i');
+            adminIcon.className = 'fas fa-chart-line';
+            adminIcon.setAttribute('aria-hidden', 'true');
+            adminLink.append(adminIcon, document.createTextNode(' Admin overview'));
+            profileDropdown.prepend(adminLink);
         }
         
         // Handle profile image if available
@@ -71,15 +91,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle logout
     const logoutLinks = document.querySelectorAll('.logout-link');
     logoutLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', async function(e) {
             e.preventDefault();
-            
-            // Clear localStorage
+
+            try {
+                const response = await fetch('/api/auth/logout', { method: 'POST' });
+                if (!response.ok) throw new Error(`Logout request failed (${response.status})`);
+            } catch (error) {
+                console.error('Unable to complete server logout:', error);
+            }
+
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             sessionStorage.clear();
-            
-            // Redirect to login page
+
             window.location.href = '/login';
         });
     });
@@ -127,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * Update header when user data changes
  */
 function updateHeader() {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userData = getStoredUser();
     const userName = document.getElementById('userName');
     
     if (userName && userData && Object.keys(userData).length > 0) {

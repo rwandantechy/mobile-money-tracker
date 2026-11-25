@@ -79,6 +79,15 @@ NODE_ENV=production
 access settings. After adding or changing environment variables, redeploy. For
 a production deployment, run `npx vercel --prod`.
 
+### Admin access
+
+The admin overview is available at `/admin` and reports aggregated platform
+metrics for the last 30 days. Both the page and its API require an authenticated
+account whose MongoDB `role` is `admin`; public registration cannot grant this
+role. Grant it only to a trusted account using your restricted database
+administration workflow. The admin overview does not expose a user directory
+or individual merchant records.
+
 ### 5. DigitalOcean App Platform
 1. Connect your GitHub repository
 2. Set environment variables
