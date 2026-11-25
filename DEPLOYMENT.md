@@ -55,13 +55,29 @@ railway up
 4. Start command: `npm start`
 
 ### 4. Vercel Deployment
-```bash
-# Install Vercel CLI
-npm install -g vercel
 
-# Deploy
-vercel --prod
+The project includes a Vercel serverless entry point and `vercel.json`. Import
+the Git repository into Vercel, or deploy from the repository root with the
+Vercel CLI:
+
+```bash
+npx vercel
 ```
+
+Add these environment variables in **Vercel Project Settings → Environment
+Variables** (select Production, and Preview too if you use preview deployments):
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=a_long_random_secret
+SMTP_EMAIL=your_gmail_address
+SMTP_PASS=your_gmail_app_password
+NODE_ENV=production
+```
+
+`MONGODB_URI` must allow connections from Vercel in your MongoDB Atlas network
+access settings. After adding or changing environment variables, redeploy. For
+a production deployment, run `npx vercel --prod`.
 
 ### 5. DigitalOcean App Platform
 1. Connect your GitHub repository

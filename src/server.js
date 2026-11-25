@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -8,6 +7,7 @@ const earningsRouter = require('./routes/earnings');
 const authRouter = require('./routes/auth');
 const auth = require('./middleware/auth');
 const webAuth = require('./middleware/webAuth');
+const connectToDatabase = require('./utils/database');
 
 const app = express();
 const PORT = process.env.PORT || 6000;
@@ -115,26 +115,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// MongoDB Connection with Atlas
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    retryWrites: true,
-    w: 'majority',
-    dbName: 'mydata'
-})
-.then(() => {
-    console.log('Connected to MongoDB Atlas');
-    // Start server only after successful database connection
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-})
-.catch(err => {
-    console.error('MongoDB Atlas connection error:', err);
-    process.exit(1); // Exit if cannot connect to database
-});
-
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
     console.error('Unhandled Promise Rejection:', err);
@@ -144,4 +124,20 @@ process.on('unhandledRejection', (err) => {
     } else {
         process.exit(1);
     }
-}); 
+});
+
+if (require.main === module) {
+    connectToDatabase()
+      .then(() => {
+        console.log('Connected to MongoDB Atlas');
+        app.listen(PORT, () => {
+          console.log(`Server is running on port ${PORT}`);
+        });
+      })
+      .catch(error => {
+        console.error('MongoDB Atlas connection error:', error);
+        process.exit(1);
+      });
+}
+
+module.exports = app;
